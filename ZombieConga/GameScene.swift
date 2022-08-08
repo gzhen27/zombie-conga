@@ -17,12 +17,14 @@ class GameScene: SKScene {
     var diffInTime: TimeInterval = 0
     var lastUpdateTime: TimeInterval = 0
     var velocity = CGPoint.zero
+    var lastTouchLocation: CGPoint
     
     override init(size: CGSize) {
         let maxAspectRatio: CGFloat = 16.0/9.0
         let playableHeight = size.width / maxAspectRatio
         let playableMargin = (size.height - playableHeight)/2.0
         playableRect = CGRect(x: 0, y: playableMargin, width: size.width, height: playableHeight)
+        lastTouchLocation = zombie.position
         
         super.init(size: size)
     }
@@ -55,28 +57,35 @@ class GameScene: SKScene {
             diffInTime = 0
         }
         lastUpdateTime = currentTime
-        print("\(diffInTime*1000)")
         move(sprite: zombie, velocity: velocity)
         boundsCheckZombie()
-        rotate(sprite: zombie, direction: velocity)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
+        lastTouchLocation = touchLocation
         sceneTouched(touchLocation: touchLocation)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
+        lastTouchLocation = touchLocation
         sceneTouched(touchLocation: touchLocation)
     }
 
     // move a sprite node with a velocity
     func move(sprite: SKSpriteNode, velocity: CGPoint) {
         let amountToMove = velocity * CGFloat(diffInTime)
-        sprite.position += amountToMove
+        let remainingDistance = lastTouchLocation - sprite.position
+        if (remainingDistance.length() <= amountToMove.length()) {
+            sprite.position = lastTouchLocation
+            self.velocity = CGPoint.zero
+        } else {
+            sprite.position += amountToMove
+            rotate(sprite: zombie, direction: velocity)
+        }
     }
     
     // update the velocity between the zombie position and the touched position
