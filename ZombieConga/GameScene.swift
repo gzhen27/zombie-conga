@@ -12,10 +12,24 @@ class GameScene: SKScene {
     
     let zombie = SKSpriteNode(imageNamed: "zombie1")
     let zombieMovePointsPerSec: CGFloat = 480.0
+    let playableRect: CGRect
     
     var diffInTime: TimeInterval = 0
     var lastUpdateTime: TimeInterval = 0
     var velocity = CGPoint.zero
+    
+    override init(size: CGSize) {
+        let maxAspectRatio: CGFloat = 16.0/9.0
+        let playableHeight = size.width / maxAspectRatio
+        let playableMargin = (size.height - playableHeight)/2.0
+        playableRect = CGRect(x: 0, y: playableMargin, width: size.width, height: playableHeight)
+        
+        super.init(size: size)
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
     override func didMove(to view: SKView) {
@@ -30,6 +44,7 @@ class GameScene: SKScene {
         zombie.position = CGPoint(x: 400, y: 400)
         
         addChild(background)
+        debugDrawPlayableArea()
         addChild(zombie)
     }
     
@@ -80,8 +95,8 @@ class GameScene: SKScene {
     
     // bounds a spirte node to avoid it runs off the screen
     func boundsCheckZombie() {
-        let bottomLeft = CGPoint.zero
-        let topRight = CGPoint(x: size.width, y: size.height)
+        let bottomLeft = CGPoint(x: 0, y: playableRect.minY)
+        let topRight = CGPoint(x: size.width, y: playableRect.maxY)
         
         switch (zombie.position.x, zombie.position.y) {
         case let (x, _) where x <= bottomLeft.x:
@@ -99,5 +114,13 @@ class GameScene: SKScene {
         default:
             break
         }
+    }
+    
+    // draw a playable rectangle to the screen
+    func debugDrawPlayableArea() {
+        let shape = SKShapeNode(rect: playableRect)
+        shape.strokeColor = SKColor.red
+        shape.lineWidth = 4.0
+        addChild(shape)
     }
 }
