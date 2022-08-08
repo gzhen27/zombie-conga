@@ -11,7 +11,7 @@ import GameplayKit
 class GameScene: SKScene {
     
     let zombie = SKSpriteNode(imageNamed: "zombie1")
-    let zombieMovePointsPerSec: CGFloat = 480.0
+    let zombieMovePointsPerSec: CGFloat = 240.0
     let playableRect: CGRect
     
     var diffInTime: TimeInterval = 0
@@ -58,6 +58,7 @@ class GameScene: SKScene {
         print("\(diffInTime*1000)")
         move(sprite: zombie, velocity: velocity)
         boundsCheckZombie()
+        rotate(sprite: zombie, direction: velocity)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -122,5 +123,10 @@ class GameScene: SKScene {
         shape.strokeColor = SKColor.red
         shape.lineWidth = 4.0
         addChild(shape)
+    }
+    
+    // make a sprite node rotate
+    func rotate(sprite: SKSpriteNode, direction: CGPoint) {
+        sprite.zRotation = atan2(direction.y, direction.x)
     }
 }
