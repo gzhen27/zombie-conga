@@ -50,6 +50,8 @@ class GameScene: SKScene {
         zombie.position = zombieInitialPosition
         addChild(zombie)
         
+        spawnEnemy()
+        
         debugDrawPlayableArea()
     }
     
@@ -89,6 +91,15 @@ class GameScene: SKScene {
         let offset = location - zombie.position
         let direction = offset.normalized()
         velocity = direction * zombieMovePointsPerSec
+    }
+    
+    func spawnEnemy() {
+        let enemy = SKSpriteNode(imageNamed: "enemy")
+        enemy.position = CGPoint(x: size.width + enemy.size.width/2, y: size.height/2)
+        addChild(enemy)
+        
+        let actionMove = SKAction.move(to: CGPoint(x: -enemy.size.width/2, y: enemy.position.y), duration: 10.0)
+        enemy.run(actionMove)
     }
     
     func boundsCheckZombie() {
