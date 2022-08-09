@@ -98,10 +98,14 @@ class GameScene: SKScene {
         enemy.position = CGPoint(x: size.width + enemy.size.width/2, y: size.height/2)
         addChild(enemy)
         
-        let actionMidMove = SKAction.move(to: CGPoint(x: size.width/2, y: playableRect.minY + enemy.size.height/2), duration: 1.0)
-        let actionMove = SKAction.move(to: CGPoint(x: -enemy.size.width/2, y: enemy.position.y), duration: 1.0)
+        let actionMidMove = SKAction.moveBy(x: -size.width/2-enemy.size.width/2, y: -playableRect.height/2 + enemy.size.height/2, duration: 1.0)
+        let actionMove = SKAction.moveBy(x: -size.width/2-enemy.size.width/2, y: enemy.position.y, duration: 1.0)
         let waitAction = SKAction.wait(forDuration: 1.0)
-        let sequence = SKAction.sequence([actionMidMove, waitAction ,actionMove])
+        let logMessage = SKAction.run {
+            print("Reached middle")
+        }
+        let halfSequence = SKAction.sequence([actionMidMove, logMessage, waitAction ,actionMove])
+        let sequence = SKAction.sequence([halfSequence, halfSequence.reversed()])
         
         enemy.run(sequence)
     }
