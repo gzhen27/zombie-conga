@@ -12,6 +12,7 @@ class GameScene: SKScene {
     
     // MARK: - Properties
     let zombie = SKSpriteNode(imageNamed: "zombie1")
+    let zombieInitialPosition = CGPoint(x: 400, y: 400)
     let zombieMovePointsPerSec: CGFloat = 240.0
     let zombieRotateRadiansPerSec: CGFloat = 4.0 * π
     let playableRect: CGRect
@@ -21,12 +22,14 @@ class GameScene: SKScene {
     var velocity = CGPoint.zero
     var lastTouchLocation: CGPoint
     
+    
+    // MARK: - Lifecycle
     override init(size: CGSize) {
         let maxAspectRatio: CGFloat = 16.0/9.0
         let playableHeight = size.width / maxAspectRatio
         let playableMargin = (size.height - playableHeight)/2.0
         playableRect = CGRect(x: 0, y: playableMargin, width: size.width, height: playableHeight)
-        lastTouchLocation = zombie.position
+        lastTouchLocation = zombieInitialPosition
         
         super.init(size: size)
     }
@@ -39,17 +42,15 @@ class GameScene: SKScene {
     override func didMove(to view: SKView) {
         backgroundColor = SKColor.black
         
-        // backgrund node
         let background = SKSpriteNode(imageNamed: "background1")
         background.position = CGPoint(x: size.width/2, y: size.height/2)
         background.zPosition = -1
-        
-        // zombie node
-        zombie.position = CGPoint(x: 400, y: 400)
-        
         addChild(background)
-        debugDrawPlayableArea()
+        
+        zombie.position = zombieInitialPosition
         addChild(zombie)
+        
+        debugDrawPlayableArea()
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -63,7 +64,8 @@ class GameScene: SKScene {
         boundsCheckZombie()
     }
 
-    // move a sprite node with a velocity
+    
+    // MARK: - Helper func
     func move(sprite: SKSpriteNode, velocity: CGPoint) {
         let amountToMove = velocity * CGFloat(diffInTime)
         let remainingDistance = lastTouchLocation - sprite.position
@@ -76,7 +78,6 @@ class GameScene: SKScene {
         }
     }
     
-    // make a sprite node rotate
     func rotate(sprite: SKSpriteNode, direction: CGPoint, rotateRadiansPerSec: CGFloat) {
         let shortestAngle = shortestAngleBetween(angleA: sprite.zRotation, angelB: direction.angle)
         let rotateDuringTime = rotateRadiansPerSec * CGFloat(diffInTime)
@@ -84,19 +85,12 @@ class GameScene: SKScene {
         sprite.zRotation += (amountToRotate * shortestAngle.sign())
     }
     
-    // update the velocity between the zombie position and the touched position
     func moveZombieToward(location: CGPoint) {
         let offset = location - zombie.position
         let direction = offset.normalized()
         velocity = direction * zombieMovePointsPerSec
     }
     
-    // trigger the move event for a zombie
-    func sceneTouched(touchLocation: CGPoint) {
-        moveZombieToward(location: touchLocation)
-    }
-    
-    // bounds a spirte node to avoid it runs off the screen
     func boundsCheckZombie() {
         let bottomLeft = CGPoint(x: 0, y: playableRect.minY)
         let topRight = CGPoint(x: size.width, y: playableRect.maxY)
@@ -119,7 +113,6 @@ class GameScene: SKScene {
         }
     }
     
-    // draw a playable rectangle to the screen
     func debugDrawPlayableArea() {
         let shape = SKShapeNode(rect: playableRect)
         shape.strokeColor = SKColor.red
@@ -131,14 +124,17 @@ class GameScene: SKScene {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
-        lastTouchLocation = touchLocation
         sceneTouched(touchLocation: touchLocation)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
-        lastTouchLocation = touchLocation
         sceneTouched(touchLocation: touchLocation)
+    }
+    
+    func sceneTouched(touchLocation: CGPoint) {
+        lastTouchLocation = touchLocation
+        moveZombieToward(location: touchLocation)
     }
 }
