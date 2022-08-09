@@ -1,5 +1,5 @@
 //
-//  ExtensionCGPoint.swift
+//  Extensions.swift
 //  ZombieConga
 //
 //  Created by G Zhen on 8/8/22.
@@ -31,4 +31,14 @@ extension CGPoint {
         return self / length()
     }
     
+}
+
+extension CGFloat {
+    
+    /**
+     return 1 if the it is greater than or equal to 0, otherwise returns -1
+     */
+    func sign() -> CGFloat {
+        return self >= 0.0 ? 1.0 : -1.0
+    }
 }

@@ -10,8 +10,10 @@ import GameplayKit
 
 class GameScene: SKScene {
     
+    // MARK: - Properties
     let zombie = SKSpriteNode(imageNamed: "zombie1")
-    let zombieMovePointsPerSec: CGFloat = 480.0
+    let zombieMovePointsPerSec: CGFloat = 240.0
+    let zombieRotateRadiansPerSec: CGFloat = 4.0 * π
     let playableRect: CGRect
     
     var diffInTime: TimeInterval = 0
@@ -60,20 +62,6 @@ class GameScene: SKScene {
         move(sprite: zombie, velocity: velocity)
         boundsCheckZombie()
     }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        let touchLocation = touch.location(in: self)
-        lastTouchLocation = touchLocation
-        sceneTouched(touchLocation: touchLocation)
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        let touchLocation = touch.location(in: self)
-        lastTouchLocation = touchLocation
-        sceneTouched(touchLocation: touchLocation)
-    }
 
     // move a sprite node with a velocity
     func move(sprite: SKSpriteNode, velocity: CGPoint) {
@@ -84,8 +72,16 @@ class GameScene: SKScene {
             self.velocity = CGPoint.zero
         } else {
             sprite.position += amountToMove
-            rotate(sprite: zombie, direction: velocity)
+            rotate(sprite: zombie, direction: velocity, rotateRadiansPerSec: zombieRotateRadiansPerSec)
         }
+    }
+    
+    // make a sprite node rotate
+    func rotate(sprite: SKSpriteNode, direction: CGPoint, rotateRadiansPerSec: CGFloat) {
+        let shortestAngle = shortestAngleBetween(angleA: sprite.zRotation, angelB: direction.angle)
+        let rotateDuringTime = rotateRadiansPerSec * CGFloat(diffInTime)
+        let amountToRotate = abs(shortestAngle) < rotateDuringTime ? abs(shortestAngle) : rotateDuringTime
+        sprite.zRotation += (amountToRotate * shortestAngle.sign())
     }
     
     // update the velocity between the zombie position and the touched position
@@ -123,16 +119,26 @@ class GameScene: SKScene {
         }
     }
     
-    // make a sprite node rotate
-    func rotate(sprite: SKSpriteNode, direction: CGPoint) {
-        sprite.zRotation = direction.angle
-    }
-    
     // draw a playable rectangle to the screen
     func debugDrawPlayableArea() {
         let shape = SKShapeNode(rect: playableRect)
         shape.strokeColor = SKColor.red
         shape.lineWidth = 4.0
         addChild(shape)
+    }
+    
+    // MARK: - UIREsponder
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let touchLocation = touch.location(in: self)
+        lastTouchLocation = touchLocation
+        sceneTouched(touchLocation: touchLocation)
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let touchLocation = touch.location(in: self)
+        lastTouchLocation = touchLocation
+        sceneTouched(touchLocation: touchLocation)
     }
 }

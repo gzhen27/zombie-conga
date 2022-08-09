@@ -14,7 +14,7 @@
 		EB9D8B17289C31E600440059 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB9D8B16289C31E600440059 /* Assets.xcassets */; };
 		EB9D8B1A289C31E600440059 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB9D8B18289C31E600440059 /* LaunchScreen.storyboard */; };
 		EBD7D24F28A1A81A00E3513B /* MathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD7D24E28A1A81A00E3513B /* MathUtils.swift */; };
-		EBD7D25128A1ACBA00E3513B /* ExtensionCGPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD7D25028A1ACBA00E3513B /* ExtensionCGPoint.swift */; };
+		EBD7D25128A1ACBA00E3513B /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBD7D25028A1ACBA00E3513B /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,7 +26,7 @@
 		EB9D8B16289C31E600440059 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EB9D8B19289C31E600440059 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EBD7D24E28A1A81A00E3513B /* MathUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathUtils.swift; sourceTree = "<group>"; };
-		EBD7D25028A1ACBA00E3513B /* ExtensionCGPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionCGPoint.swift; sourceTree = "<group>"; };
+		EBD7D25028A1ACBA00E3513B /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +82,7 @@
 		EBD7D25328A1ACEA00E3513B /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				EBD7D25028A1ACBA00E3513B /* ExtensionCGPoint.swift */,
+				EBD7D25028A1ACBA00E3513B /* Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -160,7 +160,7 @@
 			files = (
 				EB9D8B10289C31DE00440059 /* GameScene.swift in Sources */,
 				EBD7D24F28A1A81A00E3513B /* MathUtils.swift in Sources */,
-				EBD7D25128A1ACBA00E3513B /* ExtensionCGPoint.swift in Sources */,
+				EBD7D25128A1ACBA00E3513B /* Extensions.swift in Sources */,
 				EB9D8B12289C31DE00440059 /* GameViewController.swift in Sources */,
 				EB9D8B0A289C31DE00440059 /* AppDelegate.swift in Sources */,
 			);
