@@ -98,8 +98,12 @@ class GameScene: SKScene {
         enemy.position = CGPoint(x: size.width + enemy.size.width/2, y: size.height/2)
         addChild(enemy)
         
-        let actionMove = SKAction.move(to: CGPoint(x: -enemy.size.width/2, y: enemy.position.y), duration: 10.0)
-        enemy.run(actionMove)
+        let actionMidMove = SKAction.move(to: CGPoint(x: size.width/2, y: playableRect.minY + enemy.size.height/2), duration: 1.0)
+        let actionMove = SKAction.move(to: CGPoint(x: -enemy.size.width/2, y: enemy.position.y), duration: 1.0)
+        let waitAction = SKAction.wait(forDuration: 1.0)
+        let sequence = SKAction.sequence([actionMidMove, waitAction ,actionMove])
+        
+        enemy.run(sequence)
     }
     
     func boundsCheckZombie() {
