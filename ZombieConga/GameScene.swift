@@ -50,7 +50,11 @@ class GameScene: SKScene {
         zombie.position = zombieInitialPosition
         addChild(zombie)
         
-        spawnEnemy()
+        run(SKAction.repeatForever(
+            SKAction.sequence([SKAction.run { [weak self] in
+                self?.spawnEnemy()
+            }, SKAction.wait(forDuration: 2.0)])
+        ))
         
         debugDrawPlayableArea()
     }
@@ -95,19 +99,17 @@ class GameScene: SKScene {
     
     func spawnEnemy() {
         let enemy = SKSpriteNode(imageNamed: "enemy")
-        enemy.position = CGPoint(x: size.width + enemy.size.width/2, y: size.height/2)
+        enemy.position = CGPoint(
+            x: size.width + enemy.size.width/2,
+            y: CGFloat.random(
+                min: playableRect.minY + enemy.size.height/2,
+                max: playableRect.maxY + enemy.size.height/2
+            )
+        )
         addChild(enemy)
         
-        let actionMidMove = SKAction.moveBy(x: -size.width/2-enemy.size.width/2, y: -playableRect.height/2 + enemy.size.height/2, duration: 1.0)
-        let actionMove = SKAction.moveBy(x: -size.width/2-enemy.size.width/2, y: enemy.position.y, duration: 1.0)
-        let waitAction = SKAction.wait(forDuration: 1.0)
-        let logMessage = SKAction.run {
-            print("Reached middle")
-        }
-        let halfSequence = SKAction.sequence([actionMidMove, logMessage, waitAction ,actionMove])
-        let sequence = SKAction.sequence([halfSequence, halfSequence.reversed()])
-        
-        enemy.run(sequence)
+        let action = SKAction.moveTo(x: -enemy.size.width/2, duration: 2.0)
+        enemy.run(action)
     }
     
     func boundsCheckZombie() {

@@ -41,4 +41,19 @@ extension CGFloat {
     func sign() -> CGFloat {
         return self >= 0.0 ? 1.0 : -1.0
     }
+    
+    /**
+     generate a random CGFloat number in a range between 0 and 1
+     */
+    static func random() -> CGFloat {
+        return CGFloat(Float(arc4random()) / Float(UInt32.max))
+    }
+    
+    /**
+     generate a random CGFloat number in a range between min and max
+     */
+    static func random(min: CGFloat, max: CGFloat) -> CGFloat {
+        assert(min < max)
+        return CGFloat.random() * (max - min) + min
+    }
 }
