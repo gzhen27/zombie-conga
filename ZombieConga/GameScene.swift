@@ -15,7 +15,6 @@ class GameScene: SKScene {
     let zombieInitialPosition = CGPoint(x: 400, y: 400)
     let zombieMovePointsPerSec: CGFloat = 240.0
     let zombieRotateRadiansPerSec: CGFloat = 4.0 * π
-    let zombieAnimation: SKAction
     
     let playableRect: CGRect
     
@@ -32,16 +31,6 @@ class GameScene: SKScene {
         let playableMargin = (size.height - playableHeight)/2.0
         playableRect = CGRect(x: 0, y: playableMargin, width: size.width, height: playableHeight)
         lastTouchLocation = zombieInitialPosition
-        
-        var textures: [SKTexture] = []
-        for i in 1...4 {
-            textures.append(SKTexture(imageNamed: "zombie\(i)"))
-        }
-        
-        textures.append(textures[2])
-        textures.append(textures[1])
-        
-        zombieAnimation = SKAction.animate(with: textures, timePerFrame: 0.1)
         
         super.init(size: size)
     }
@@ -68,7 +57,7 @@ class GameScene: SKScene {
             }, SKAction.wait(forDuration: 2.0)])
         ))
         
-        zombie.run(SKAction.repeatForever(zombieAnimation))
+        zombie.run(SKAction.repeatForever(getZombieAnimation()))
         
         debugDrawPlayableArea()
     }
@@ -109,6 +98,18 @@ class GameScene: SKScene {
         let offset = location - zombie.position
         let direction = offset.normalized()
         velocity = direction * zombieMovePointsPerSec
+    }
+
+    func getZombieAnimation() -> SKAction {
+        var textures: [SKTexture] = []
+        for i in 1...4 {
+            textures.append(SKTexture(imageNamed: "zombie\(i)"))
+        }
+        
+        textures.append(textures[2])
+        textures.append(textures[1])
+        
+        return SKAction.animate(with: textures, timePerFrame: 0.1)
     }
     
     func spawnEnemy() {
