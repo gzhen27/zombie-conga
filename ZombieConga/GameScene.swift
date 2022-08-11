@@ -109,7 +109,8 @@ class GameScene: SKScene {
         addChild(enemy)
         
         let action = SKAction.moveTo(x: -enemy.size.width/2, duration: 2.0)
-        enemy.run(action)
+        let actionRemove = SKAction.removeFromParent()
+        enemy.run(SKAction.sequence([action, actionRemove]))
     }
     
     func boundsCheckZombie() {
