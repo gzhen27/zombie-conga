@@ -154,10 +154,14 @@ class GameScene: SKScene {
         cat.setScale(0)
         addChild(cat)
         let appear = SKAction.scale(to: 1.0, duration: 0.5)
-        let wait = SKAction.wait(forDuration: 10.0)
+        cat.zRotation = -π / 16.0
+        let leftWiggle = SKAction.rotate(byAngle: π/8.0, duration: 0.5)
+        let rightWiggle = leftWiggle.reversed()
+        let fullWiggle = SKAction.sequence([leftWiggle, rightWiggle])
+        let wiggleWait = SKAction.repeat(fullWiggle, count: 10)
         let disapper = SKAction.scale(to: 0, duration: 0.5)
         let removeFromParent = SKAction.removeFromParent()
-        let actions = [appear, wait, disapper, removeFromParent]
+        let actions = [appear, wiggleWait, disapper, removeFromParent]
         cat.run(SKAction.sequence(actions))
     }
     
