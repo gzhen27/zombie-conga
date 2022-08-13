@@ -57,6 +57,12 @@ class GameScene: SKScene {
             }, SKAction.wait(forDuration: 2.0)])
         ))
         
+        run(SKAction.repeatForever(
+            SKAction.sequence([SKAction.run { [weak self] in
+                self?.spawnCat()
+            }, SKAction.wait(forDuration: 1.0)])
+        ))
+        
         debugDrawPlayableArea()
     }
     
@@ -138,6 +144,23 @@ class GameScene: SKScene {
         enemy.run(SKAction.sequence([action, actionRemove]))
     }
     
+    func spawnCat() {
+        let cat = SKSpriteNode(imageNamed: "cat")
+        cat.position = CGPoint(
+            x: CGFloat.random(min: playableRect.minX, max: playableRect.maxX),
+            y: CGFloat.random(min: playableRect.minY, max: playableRect.maxY)
+        )
+        
+        cat.setScale(0)
+        addChild(cat)
+        let appear = SKAction.scale(to: 1.0, duration: 0.5)
+        let wait = SKAction.wait(forDuration: 10.0)
+        let disapper = SKAction.scale(to: 0, duration: 0.5)
+        let removeFromParent = SKAction.removeFromParent()
+        let actions = [appear, wait, disapper, removeFromParent]
+        cat.run(SKAction.sequence(actions))
+    }
+    
     func boundsCheckZombie() {
         let bottomLeft = CGPoint(x: 0, y: playableRect.minY)
         let topRight = CGPoint(x: size.width, y: playableRect.maxY)
@@ -167,7 +190,7 @@ class GameScene: SKScene {
         addChild(shape)
     }
     
-    // MARK: - UIREsponder
+    // MARK: - UIResponder
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
@@ -180,7 +203,8 @@ class GameScene: SKScene {
         sceneTouched(touchLocation: touchLocation)
     }
     
-    func sceneTouched(touchLocation: CGPoint) {
+    // MARK: - UIResponder helpers
+    private func sceneTouched(touchLocation: CGPoint) {
         lastTouchLocation = touchLocation
         moveZombieToward(location: touchLocation)
     }
