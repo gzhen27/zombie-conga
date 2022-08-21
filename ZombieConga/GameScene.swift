@@ -76,6 +76,10 @@ class GameScene: SKScene {
         move(sprite: zombie, velocity: velocity)
         boundsCheckZombie()
     }
+    
+    override func didEvaluateActions() {
+        checkCollisions()
+    }
 
     
     // MARK: - Helper func
@@ -130,6 +134,7 @@ class GameScene: SKScene {
     
     func spawnEnemy() {
         let enemy = SKSpriteNode(imageNamed: "enemy")
+        enemy.name = "enemy"
         enemy.position = CGPoint(
             x: size.width + enemy.size.width/2,
             y: CGFloat.random(
@@ -146,6 +151,7 @@ class GameScene: SKScene {
     
     func spawnCat() {
         let cat = SKSpriteNode(imageNamed: "cat")
+        cat.name = "cat"
         cat.position = CGPoint(
             x: CGFloat.random(min: playableRect.minX, max: playableRect.maxX),
             y: CGFloat.random(min: playableRect.minY, max: playableRect.maxY)
@@ -201,6 +207,37 @@ class GameScene: SKScene {
         shape.lineWidth = 4.0
         addChild(shape)
     }
+    
+    // MARK: - Collision detection helpers
+    func zombieHit(cat: SKSpriteNode) {
+        cat.removeFromParent()
+    }
+    
+    func zombieHit(enemy: SKSpriteNode) {
+        enemy.removeFromParent()
+    }
+    
+    func checkCollisions() {
+        var hitCats: [SKSpriteNode] = []
+        enumerateChildNodes(withName: "cat") { node, _ in
+            let cat = node as! SKSpriteNode
+            if cat.frame.intersects(self.zombie.frame) {
+                hitCats.append(cat)
+            }
+        }
+        
+        hitCats.forEach { zombieHit(cat: $0) }
+        
+        var hitEnemies: [SKSpriteNode] = []
+        enumerateChildNodes(withName: "enemy") { node, _ in
+            let enemy = node as! SKSpriteNode
+            if node.frame.intersects(self.zombie.frame) {
+                hitEnemies.append(enemy)
+            }
+        }
+        hitEnemies.forEach { zombieHit(enemy: $0) }
+    }
+    
     
     // MARK: - UIResponder
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
