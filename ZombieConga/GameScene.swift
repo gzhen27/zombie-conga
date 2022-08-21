@@ -6,7 +6,6 @@
 //
 
 import SpriteKit
-import GameplayKit
 
 class GameScene: SKScene {
     
@@ -15,6 +14,10 @@ class GameScene: SKScene {
     let zombieInitialPosition = CGPoint(x: 400, y: 400)
     let zombieMovePointsPerSec: CGFloat = 240.0
     let zombieRotateRadiansPerSec: CGFloat = 4.0 * π
+    
+    // Sounds
+    let catCollisionSound = SKAction.playSoundFileNamed("Sounds/hitCat.wav", waitForCompletion: false)
+    let enemyCollisionSound = SKAction.playSoundFileNamed("Sounds/hitCatLady.wav", waitForCompletion: false)
     
     let playableRect: CGRect
     
@@ -211,12 +214,12 @@ class GameScene: SKScene {
     // MARK: - Collision detection helpers
     func zombieHit(cat: SKSpriteNode) {
         cat.removeFromParent()
-        run(SKAction.playSoundFileNamed("Sounds/hitCat.wav", waitForCompletion: false))
+        run(catCollisionSound)
     }
     
     func zombieHit(enemy: SKSpriteNode) {
         enemy.removeFromParent()
-        run(SKAction.playSoundFileNamed("Sounds/hitCatLady.wav", waitForCompletion: false))
+        run(enemyCollisionSound)
     }
     
     func checkCollisions() {
