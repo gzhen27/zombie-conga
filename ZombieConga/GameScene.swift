@@ -211,10 +211,12 @@ class GameScene: SKScene {
     // MARK: - Collision detection helpers
     func zombieHit(cat: SKSpriteNode) {
         cat.removeFromParent()
+        run(SKAction.playSoundFileNamed("Sounds/hitCat.wav", waitForCompletion: false))
     }
     
     func zombieHit(enemy: SKSpriteNode) {
         enemy.removeFromParent()
+        run(SKAction.playSoundFileNamed("Sounds/hitCatLady.wav", waitForCompletion: false))
     }
     
     func checkCollisions() {
